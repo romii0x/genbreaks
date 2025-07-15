@@ -40,8 +40,8 @@ class GenBreaks:
 
 
     # audio generation methods
-    def train_on_directory(self, directory: str, epochs: int = 100, 
-                          batch_size: int = 8, learning_rate: float = 0.001):
+    def train_on_directory(self, directory: str, epochs: int = 500, 
+                          batch_size: int = 16, learning_rate: float = 1e-4):
         # train the audio model on all wav files in a directory
         if self.mode != "audio":
             raise ValueError("This method is only available in audio mode")

@@ -36,7 +36,7 @@ def run_audio_demo():
         genbreaks = GenBreaks(mode="audio", sample_length=44100)
         
         print(f"training on {len(wav_files)} breakbeat samples (500 epochs)...")
-        genbreaks.train_on_directory(samples_dir, epochs=500, batch_size=4)
+        genbreaks.train_on_directory(samples_dir, epochs=500, batch_size=16)
         
         print("generating 3 new breakbeat samples...")
         samples = genbreaks.generate_multiple_samples(num_samples=3, output_dir="generated_breaks")

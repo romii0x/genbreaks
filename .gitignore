@@ -32,6 +32,7 @@ MANIFEST
 
 # Audio files
 *.wav
+*.WAV
 *.mp3
 *.flac
 *.aiff
@@ -39,7 +40,7 @@ MANIFEST
 
 # Generated files
 slices/
-generated_beat_*.wav
+gen_break_*.wav
 sample_breakbeat.wav
 beat_model.pth
 
