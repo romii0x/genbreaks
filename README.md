@@ -5,13 +5,14 @@
              |___  |_____|__|__|_____|__| |_____|___._|__|__|_____|
              |_____|                                               
 ```
-breakbeat generation system with neural audio synthesis and lstm-based sequence generation.
+breakbeat generation system with VAE audio synthesis and lstm-based sequence generation.
 
 ## Architecture
 
 ### audio generation mode
-- autoencoder neural network trained on breakbeat samples
-- generates raw audio from scratch using pytorch
+- variational autoencoder trained on mel spectrograms of breakbeat samples
+- uses convolutional encoder/decoder with proper latent space for generation
+- converts spectrograms back to audio using Griffin Lim reconstruction
 - output: `generated_breaks/` directory
 
 ### sequence generation mode  
@@ -36,8 +37,8 @@ from src.main import GenBreaks
 # initialize audio mode
 genbreaks = GenBreaks(mode="audio", sample_length=44100)
 
-# train on breakbeat samples
-genbreaks.train_on_directory("breaks", epochs=2500, batch_size=4)
+# train VAE on breakbeat samples
+genbreaks.train_on_directory("breaks", epochs=500, batch_size=16)
 
 # generate samples
 genbreaks.generate_multiple_samples(5, "generated_breaks")
@@ -67,7 +68,7 @@ genbreaks.render_sequence(sequence, "sliced_breaks/output.wav")
 ### GenBreaks Class
 
 #### audio mode methods
-- `train_on_directory(directory, epochs, batch_size, learning_rate)`
+- `train_on_directory(directory, epochs=500, batch_size=16, learning_rate=1e-4)` - auto-saves on interrupt
 - `generate_sample(output_path=None)`
 - `generate_multiple_samples(num_samples, output_dir)`
 - `save_model(filepath)`
