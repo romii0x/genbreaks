@@ -1,0 +1,14 @@
+model:
+  latent_dim: 256
+  hidden_dims: [32, 64, 128, 256]
+
+training:
+  epochs: 500
+  batch_size: 16
+  learning_rate: 0.0001
+
+generation:
+  num_samples: 5
+  output_dir: "output"
+  sample_length: 44100
+  model_path: "models/audio_vae_best.pth"
