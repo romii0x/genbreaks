@@ -5,124 +5,50 @@
              |___  |_____|__|__|_____|__| |_____|___._|__|__|_____|
              |_____|                                               
 ```
-breakbeat generation system with VAE audio synthesis and lstm-based sequence generation.
+variational autoencoder for generating breakbeats
 
-## Architecture
+## Overview
 
-### audio generation mode
-- variational autoencoder trained on mel spectrograms of breakbeat samples
-- uses convolutional encoder/decoder with proper latent space for generation
-- converts spectrograms back to audio using Griffin Lim reconstruction
-- output: `generated_breaks/` directory
-
-### sequence generation mode  
-- slices breakbeats into equal segments
-- lstm neural network learns musical patterns from training sequences
-- generates new sequences that follow learned breakbeat patterns
-- output: `sliced_breaks/` directory
+This project trains a VAE on audio samples to generate new breakbeat patterns. It processes audio files by splitting them into chunks, converting to spectrograms, and learning to reconstruct them.
 
 ## Installation
 
 ```bash
-./install.sh
+make install
 source .venv/bin/activate
 ```
 
 ## Usage
 
-### audio generation
-```python
-from src.main import GenBreaks
-
-# initialize audio mode
-genbreaks = GenBreaks(mode="audio", sample_length=44100)
-
-# train VAE on breakbeat samples
-genbreaks.train_on_directory("breaks", epochs=500, batch_size=16)
-
-# generate samples
-genbreaks.generate_multiple_samples(5, "generated_breaks")
-
-# save/load model
-genbreaks.save_model("model.pth")
-genbreaks.load_model("model.pth")
-```
-
-### sequence generation
-```python
-from src.main import GenBreaks
-
-# initialize sequence mode
-genbreaks = GenBreaks(mode="sequence")
-
-# load and slice breakbeat (16 slices default)
-genbreaks.load_breakbeat("breaks/amen.wav", num_slices)  # choose any number of slices
-
-# generate sequences
-sequence = genbreaks.generate_sequence(length=16, temperature=1.0)
-genbreaks.render_sequence(sequence, "sliced_breaks/output.wav")
-```
-
-## API reference
-
-### GenBreaks Class
-
-#### audio mode methods
-- `train_on_directory(directory, epochs=500, batch_size=16, learning_rate=1e-4)` - auto-saves on interrupt
-- `generate_sample(output_path=None)`
-- `generate_multiple_samples(num_samples, output_dir)`
-- `save_model(filepath)`
-- `load_model(filepath)`
-
-#### sequence mode methods
-- `load_breakbeat(file_path, num_slices)`
-- `generate_sequence(length, temperature)`
-- `render_sequence(sequence, output_path, volume)`
-
-## Demo
-
+Train on your audio samples:
 ```bash
-python demo.py
+python cli/train.py data_dir
 ```
+- `data_dir`: directory containing WAV files to train on
+- `--epochs`: number of training epochs
+- `--batch-size`: batch size
+- `--learning-rate`: learning rate
+- `--sample-length`: audio sample length in samples
 
-choose between audio generation, sequence generation, or both.
-
-## Dependencies
-
-- PyTorch
-- librosa
-- soundfile
-- sounddevice
-- numpy
-
-## Files
-
+Generate new samples:
+```bash
+python cli/generate.py
 ```
-genbreaks/
-├── breaks/                    # Input breakbeat samples
-├── generated_breaks/          # Neural audio generation output
-├── sliced_breaks/             # Sequence generation output
-├── src/
-│   ├── main.py                # Dual-mode interface
-│   ├── break_generator.py     # Neural audio generation
-│   ├── sequence_generator.py  # LSTM sequence generation
-│   ├── audio_slicer.py        # Audio slicing
-│   └── sequence_renderer.py   # Sequence rendering
-└── demo.py                    # Demo script
-```
+- `--model-path`: path to trained model
+- `--num-samples`: number of samples to generate
+- `--output-dir`: output directory
+- `--sample-length`: generated audio length in samples
 
+## Configuration
 
-## Training Data
+Edit `config/config.yaml` to adjust model parameters, training settings, and generation options.
 
-the sequence generator comes with built-in training data 
+## Architecture
 
-TBF
-
-## Finding Breakbeats
-
-### free sources
-- add free breakbeat resources WITHOUT LOGIN here
+- convolutional VAE with encoder/decoder
+- mel spectrogram processing
+- griffin-Lim audio reconstruction
 
 ## License
 
-MIT License - see LICENSE file for details.
+[MIT](LICENSE)
