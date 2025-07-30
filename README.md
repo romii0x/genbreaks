@@ -1,6 +1,6 @@
 # genbreaks
  
-variational autoencoder for generating breakbeats
+variational autoencoder for generating rhythm-based audio. this is a personal research project to help me learn more about ML and PyTorch. 
 
 ## Overview
 
